@@ -91,14 +91,29 @@ class SpotifyApiController{
             });
         }
 
-        async createPlaylist(accessToken, name, description, isPublic=true){
-            spotifyApi.setAccessToken(accessToken);
-            spotifyApi.createPlaylist(name, { 'description': description, 'public': isPublic }).then((data)=>{
+        // async createPlaylist(accessToken, name, description, isPublic=true){
+        //     spotifyApi.setAccessToken(accessToken);
+        //     spotifyApi.createPlaylist(name, { 'description': description, 'public': isPublic }).then((data)=>{
+        //         console.log('Created playlist!');
+        //         console.log(data.body.id, "playlist id")
+        //         return data.body.id
+        //     }).catch((error)=>{
+        //         return error
+        //     });
+        // }
+
+        async createPlaylist(accessToken, name, description, isPublic=true) {
+            return new Promise((resolve, reject) => {
+              spotifyApi.setAccessToken(accessToken);
+              spotifyApi.createPlaylist(name, { 'description': description, 'public': isPublic }).then((data) => {
                 console.log('Created playlist!');
-            }).catch((error)=>{
-                return error
+                resolve(data.body.id);
+              }).catch((error) => {
+                reject(error);
+              });
             });
-        }
+          }
+          
 
         async searchTrack(accessToken, searchParam){
             spotifyApi.setAccessToken(accessToken);

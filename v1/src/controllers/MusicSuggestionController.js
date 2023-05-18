@@ -36,8 +36,8 @@ class MusicSuggestionController{
         const playlistExists = userPlaylists.filter((playlist) => playlist.name === playlistName)
         let userPlaylistId = ''
         if(playlistExists.length === 0){
-            await SpotifyApiController.createPlaylist(accessToken, playlistName, playlistDescription, isPublic)
-            userPlaylistId = (await SpotifyApiController.getUserPlaylists(accessToken, userId)).items[0].id
+            const playlistId = await SpotifyApiController.createPlaylist(accessToken, playlistName, playlistDescription, isPublic)
+            userPlaylistId = playlistId
         }else{
             userPlaylistId = playlistExists[0].id
         }
@@ -45,7 +45,7 @@ class MusicSuggestionController{
         console.log(musicsToAdd)
         await SpotifyApiController.addTracksToPlaylist(accessToken, userPlaylistId, musicsToAdd)
         console.log("Added!")
-        res.json("Playlist created and songs added.")
+        res.json({message:"Playlist created and songs added.", playlistId: userPlaylistId, playlistUrl:`https://open.spotify.com/playlist/${userPlaylistId}`})
     }
 
     getPlaylistTracks = async (accessToken, prompt) => {
